@@ -868,6 +868,9 @@
         const speedMs = [1200, 800, 500, 250, 100][speedLevel - 1];
         const timeRef = useRef(0);
         const lastFrameTime = useRef(performance.now());
+        const seqViewportRef = useRef(null);
+        const seqTextRef = useRef(null);
+        const [seqOffsetX, setSeqOffsetX] = useState(0);
 
         useEffect(() => {
           if (!isAutoTemp) return;
@@ -975,8 +978,25 @@
         const fullText = STORY.slice(0, storyIndex + 1)
           .map((s) => s.token)
           .join('');
-        const displayText = fullText.length > 20 ? `...${fullText.slice(-20)}` : fullText;
+        const displayText = fullText;
         const recentContext = STORY.slice(Math.max(0, storyIndex - 2), storyIndex + 1);
+
+        const updateSequenceOffset = useCallback(() => {
+          const viewport = seqViewportRef.current;
+          const textNode = seqTextRef.current;
+          if (!viewport || !textNode) return;
+          const overflow = textNode.scrollWidth - viewport.clientWidth;
+          setSeqOffsetX(overflow > 0 ? -overflow : 0);
+        }, []);
+
+        useEffect(() => {
+          updateSequenceOffset();
+        }, [displayText, updateSequenceOffset]);
+
+        useEffect(() => {
+          window.addEventListener('resize', updateSequenceOffset);
+          return () => window.removeEventListener('resize', updateSequenceOffset);
+        }, [updateSequenceOffset]);
 
         return h(
           'div',
@@ -986,17 +1006,29 @@
           },
           h(
             'div',
-            { className: 'px-6 pt-8 pb-4 z-10 shrink-0' },
+            { className: 'px-6 pt-3 pb-1 z-10 shrink-0' },
             h(
               'div',
               { className: 'bg-slate-900/50 border border-slate-800 rounded-2xl p-4 shadow-[0_4px_20px_rgba(0,0,0,0.3)] backdrop-blur-md' },
               h('div', { className: 'text-xs font-bold text-slate-500 mb-1 tracking-wider' }, 'GENERATED SEQUENCE'),
               h(
                 'p',
-                { className: 'text-base font-serif text-slate-100 tracking-wide break-all h-8 flex items-center' },
-                displayText,
+                { className: 'text-base font-serif text-slate-100 tracking-wide h-8 flex items-center' },
+                h(
+                  'span',
+                  { ref: seqViewportRef, className: 'min-w-0 flex-1 overflow-hidden' },
+                  h(
+                    'span',
+                    {
+                      ref: seqTextRef,
+                      className: 'whitespace-nowrap inline-block will-change-transform',
+                      style: { transform: `translateX(${seqOffsetX}px)`, transition: 'transform 120ms linear' },
+                    },
+                    displayText
+                  )
+                ),
                 h('span', {
-                  className: `inline-block w-2.5 h-6 bg-cyan-400 ml-1 rounded-sm shadow-[0_0_8px_rgba(34,211,238,0.8)] transition-opacity duration-200 ${
+                  className: `inline-block w-2.5 h-6 bg-cyan-400 ml-1 rounded-sm shadow-[0_0_8px_rgba(34,211,238,0.8)] transition-opacity duration-200 shrink-0 ${
                     isPlaying && phase % 2 === 0 ? 'opacity-100' : 'opacity-20'
                   }`,
                 })
@@ -1018,14 +1050,14 @@
               },
               h(
                 'g',
-                { transform: 'translate(0, 30)' },
+                { transform: 'translate(0, 8)' },
                 h('text', { x: '200', y: '0', fontSize: '12', fill: '#64748b', textAnchor: 'middle', fontWeight: 'bold' }, 'INPUT CONTEXT'),
                 ...recentContext.map((item, idx) => {
                   const isCurrent = idx === recentContext.length - 1;
                   const xPos = 200 - recentContext.length * 50 + idx * 100;
                   return h(
                     'g',
-                    { key: `ctx-${idx}-${item.token}`, transform: `translate(${xPos}, 15)` },
+                    { key: `ctx-${idx}-${item.token}`, transform: `translate(${xPos}, 6)` },
                     h('rect', {
                       x: '0',
                       y: '0',
@@ -1059,24 +1091,24 @@
               ),
               h(
                 'g',
-                { transform: 'translate(0, 440)', opacity: phase >= 4 ? 1 : 0.2 },
+                { transform: 'translate(0, 462)', opacity: phase >= 4 ? 1 : 0.2 },
                 h('text', { x: '200', y: '0', fontSize: '12', fill: '#64748b', textAnchor: 'middle', fontWeight: 'bold' }, 'PROBABILITY DISTRIBUTION'),
                 ...calculatedProbs.slice(0, 3).map((item, idx) => {
                   const isSelected = phase >= 5 && idx === 0;
                   return h(
                     'g',
-                    { key: `prob-${idx}`, transform: `translate(30, ${15 + idx * 52})` },
-                    h('rect', { x: '0', y: '0', width: '340', height: '42', fill: '#0f172a', rx: '8', stroke: '#1e293b' }),
+                    { key: `prob-${idx}`, transform: `translate(24, ${15 + idx * 56})` },
+                    h('rect', { x: '0', y: '0', width: '352', height: '46', fill: '#0f172a', rx: '9', stroke: '#1e293b' }),
                     h('rect', {
                       x: '0',
                       y: '0',
-                      width: phase >= 4 ? item.p * 340 : 0,
-                      height: '42',
+                      width: phase >= 4 ? item.p * 352 : 0,
+                      height: '46',
                       fill: isSelected ? '#d946ef' : '#3b82f6',
-                      rx: '8',
+                      rx: '9',
                     }),
-                    h('text', { x: '14', y: '27', fontSize: '16', fill: '#ffffff', fontWeight: isSelected ? 'bold' : 'normal' }, item.word),
-                    h('text', { x: '326', y: '27', fontSize: '16', fill: isSelected ? '#fdf4ff' : '#94a3b8', textAnchor: 'end' }, `${(item.p * 100).toFixed(1)}%`)
+                    h('text', { x: '14', y: '30', fontSize: '16', fill: '#ffffff', fontWeight: isSelected ? 'bold' : 'normal' }, item.word),
+                    h('text', { x: '338', y: '30', fontSize: '16', fill: isSelected ? '#fdf4ff' : '#94a3b8', textAnchor: 'end' }, `${(item.p * 100).toFixed(1)}%`)
                   );
                 })
               ),
@@ -1227,6 +1259,8 @@
         const [status, setStatus] = useState('playing');
         const [solutionPath, setSolutionPath] = useState('');
         const [pathLength, setPathLength] = useState(0);
+        const holdStartTimeoutRef = useRef(null);
+        const holdIntervalRef = useRef(null);
 
         const generateMaze = useCallback(() => {
           const grid = Array(GRID_SIZE)
@@ -1270,14 +1304,46 @@
         const movePlayer = useCallback(
           (dx, dy) => {
             if (status !== 'playing') return;
-            const nx = player.x + dx;
-            const ny = player.y + dy;
-            if (maze[ny] && maze[ny][nx] === 0) {
-              setPlayer({ x: nx, y: ny });
-              if (nx === goal.x && ny === goal.y) setStatus('won');
-            }
+            setPlayer((prev) => {
+              const nx = prev.x + dx;
+              const ny = prev.y + dy;
+              if (maze[ny] && maze[ny][nx] === 0) {
+                if (nx === goal.x && ny === goal.y) setStatus('won');
+                return { x: nx, y: ny };
+              }
+              return prev;
+            });
           },
-          [player, maze, status, goal]
+          [maze, status, goal]
+        );
+
+        const stopHoldMove = useCallback(() => {
+          if (holdStartTimeoutRef.current) {
+            clearTimeout(holdStartTimeoutRef.current);
+            holdStartTimeoutRef.current = null;
+          }
+          if (holdIntervalRef.current) {
+            clearInterval(holdIntervalRef.current);
+            holdIntervalRef.current = null;
+          }
+        }, []);
+
+        const startHoldMove = useCallback(
+          (dx, dy) => {
+            if (status !== 'playing') return;
+            stopHoldMove();
+
+            // 押した瞬間に1歩進めてレスポンスを良くする
+            movePlayer(dx, dy);
+
+            // 少し間を置いてから連続移動を開始し、誤タップを減らす
+            holdStartTimeoutRef.current = setTimeout(() => {
+              holdIntervalRef.current = setInterval(() => {
+                movePlayer(dx, dy);
+              }, 85);
+            }, 150);
+          },
+          [movePlayer, status, stopHoldMove]
         );
 
         useEffect(() => {
@@ -1290,6 +1356,12 @@
           window.addEventListener('keydown', handleKeyDown);
           return () => window.removeEventListener('keydown', handleKeyDown);
         }, [movePlayer]);
+
+        useEffect(() => {
+          if (status !== 'playing') stopHoldMove();
+        }, [status, stopHoldMove]);
+
+        useEffect(() => () => stopHoldMove(), [stopHoldMove]);
 
         const solveMaze = () => {
           if (status === 'won' || status === 'showing_answer') return;
@@ -1482,40 +1554,52 @@
               { className: 'max-w-md mx-auto flex flex-col items-center gap-6' },
               h(
                 'div',
-                { className: 'relative w-40 h-40' },
+                { className: 'relative w-40 h-40 touch-none' },
                 h(
                   'button',
                   {
-                    onClick: () => movePlayer(0, -1),
+                    onPointerDown: () => startHoldMove(0, -1),
+                    onPointerUp: stopHoldMove,
+                    onPointerLeave: stopHoldMove,
+                    onPointerCancel: stopHoldMove,
                     className:
-                      'absolute top-0 left-1/2 -translate-x-1/2 w-12 h-14 bg-slate-800 hover:bg-slate-700 rounded-t-xl flex items-center justify-center border border-slate-700',
+                      'absolute top-0 left-1/2 -translate-x-1/2 w-12 h-14 bg-slate-800 hover:bg-slate-700 active:bg-cyan-900/70 active:scale-95 rounded-t-xl flex items-center justify-center border border-slate-700 transition-all',
                   },
                   h(ChevronUp, { size: 24, className: 'text-slate-400' })
                 ),
                 h(
                   'button',
                   {
-                    onClick: () => movePlayer(0, 1),
+                    onPointerDown: () => startHoldMove(0, 1),
+                    onPointerUp: stopHoldMove,
+                    onPointerLeave: stopHoldMove,
+                    onPointerCancel: stopHoldMove,
                     className:
-                      'absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-14 bg-slate-800 hover:bg-slate-700 rounded-b-xl flex items-center justify-center border border-slate-700',
+                      'absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-14 bg-slate-800 hover:bg-slate-700 active:bg-cyan-900/70 active:scale-95 rounded-b-xl flex items-center justify-center border border-slate-700 transition-all',
                   },
                   h(ChevronDown, { size: 24, className: 'text-slate-400' })
                 ),
                 h(
                   'button',
                   {
-                    onClick: () => movePlayer(-1, 0),
+                    onPointerDown: () => startHoldMove(-1, 0),
+                    onPointerUp: stopHoldMove,
+                    onPointerLeave: stopHoldMove,
+                    onPointerCancel: stopHoldMove,
                     className:
-                      'absolute left-0 top-1/2 -translate-y-1/2 w-14 h-12 bg-slate-800 hover:bg-slate-700 rounded-l-xl flex items-center justify-center border border-slate-700',
+                      'absolute left-0 top-1/2 -translate-y-1/2 w-14 h-12 bg-slate-800 hover:bg-slate-700 active:bg-cyan-900/70 active:scale-95 rounded-l-xl flex items-center justify-center border border-slate-700 transition-all',
                   },
                   h(ChevronLeft, { size: 24, className: 'text-slate-400' })
                 ),
                 h(
                   'button',
                   {
-                    onClick: () => movePlayer(1, 0),
+                    onPointerDown: () => startHoldMove(1, 0),
+                    onPointerUp: stopHoldMove,
+                    onPointerLeave: stopHoldMove,
+                    onPointerCancel: stopHoldMove,
                     className:
-                      'absolute right-0 top-1/2 -translate-y-1/2 w-14 h-12 bg-slate-800 hover:bg-slate-700 rounded-r-xl flex items-center justify-center border border-slate-700',
+                      'absolute right-0 top-1/2 -translate-y-1/2 w-14 h-12 bg-slate-800 hover:bg-slate-700 active:bg-cyan-900/70 active:scale-95 rounded-r-xl flex items-center justify-center border border-slate-700 transition-all',
                   },
                   h(ChevronRight, { size: 24, className: 'text-slate-400' })
                 ),
