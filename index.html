@@ -1,0 +1,1649 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SVG Sample Gallery</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-slate-100">
+    <div id="root" class="p-6 text-sm text-slate-600">
+      読み込み中です。表示されない場合はインターネット接続を確認して再読み込みしてください。
+    </div>
+
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script>
+      const { useCallback, useEffect, useMemo, useRef, useState } = React;
+      const h = React.createElement;
+      const getGcd = (a, b) => (b === 0 ? a : getGcd(b, a % b));
+      const STORY = [
+        { token: '昔々', probs: { ある: 0.82, ひとりの: 0.12, '、': 0.06 } },
+        { token: 'ある', probs: { ところ: 0.88, 村: 0.08, 日: 0.04 } },
+        { token: 'ところ', probs: { に: 0.94, で: 0.04, へ: 0.02 } },
+        { token: 'に', probs: { お爺さん: 0.45, お婆さん: 0.4, 貧しい: 0.1, 一匹の: 0.05 } },
+        { token: 'お爺さん', probs: { と: 0.85, が: 0.1, は: 0.05 } },
+        { token: 'と', probs: { お婆さん: 0.8, 犬: 0.12, 孫: 0.08 } },
+        { token: 'お婆さん', probs: { が: 0.85, は: 0.12, を: 0.03 } },
+        { token: 'が', probs: { 住んで: 0.75, おりました: 0.15, いました: 0.1 } },
+        { token: '住んで', probs: { いました: 0.65, おりました: 0.3, おった: 0.05 } },
+        { token: 'いました', probs: { '。': 0.95, とさ: 0.03, '！': 0.02 } },
+        { token: '。', probs: { 昔々: 0.99 } },
+      ];
+      const Settings2 = ({ size = 20 }) =>
+        h(
+          'svg',
+          { width: size, height: size, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: '2' },
+          h('circle', { cx: '12', cy: '12', r: '3' }),
+          h('path', {
+            d: 'M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0A1.65 1.65 0 0 0 10 3.09V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z',
+          })
+        );
+      const RefreshCcw = ({ size = 16 }) =>
+        h(
+          'svg',
+          { width: size, height: size, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: '2' },
+          h('path', { d: 'M3 2v6h6' }),
+          h('path', { d: 'M3 8a9 9 0 1 0 3-6.7L3 4' })
+        );
+      const Play = ({ size = 18 }) =>
+        h(
+          'svg',
+          { width: size, height: size, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: '2' },
+          h('polygon', { points: '6 3 20 12 6 21 6 3', fill: 'currentColor', stroke: 'none' })
+        );
+      const Pause = ({ size = 18 }) =>
+        h(
+          'svg',
+          { width: size, height: size, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: '2' },
+          h('rect', { x: '6', y: '4', width: '4', height: '16', fill: 'currentColor', stroke: 'none' }),
+          h('rect', { x: '14', y: '4', width: '4', height: '16', fill: 'currentColor', stroke: 'none' })
+        );
+      const RotateCcw = ({ size = 18 }) =>
+        h(
+          'svg',
+          { width: size, height: size, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: '2' },
+          h('path', { d: 'M1 4v6h6' }),
+          h('path', { d: 'M3.5 15a9 9 0 1 0 2-9.5L1 10' })
+        );
+      const Sparkles = ({ size = 18 }) =>
+        h(
+          'svg',
+          { width: size, height: size, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: '2' },
+          h('path', { d: 'M12 3l1.9 4.1L18 9l-4.1 1.9L12 15l-1.9-4.1L6 9l4.1-1.9L12 3z', fill: 'currentColor', stroke: 'none' }),
+          h('path', { d: 'M19 14l.9 1.9L22 17l-2.1 1.1L19 20l-.9-1.9L16 17l2.1-1.1L19 14z', fill: 'currentColor', stroke: 'none' }),
+        );
+      const Cpu = ({ size = 20 }) =>
+        h(
+          'svg',
+          { width: size, height: size, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: '2' },
+          h('rect', { x: '8', y: '8', width: '8', height: '8', rx: '1' }),
+          h('path', { d: 'M4 9h2M4 15h2M18 9h2M18 15h2M9 4v2M15 4v2M9 18v2M15 18v2' })
+        );
+      const Navigation = ({ size = 16 }) =>
+        h(
+          'svg',
+          { width: size, height: size, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: '2' },
+          h('polygon', { points: '12 2 19 21 12 17 5 21 12 2', fill: 'currentColor', stroke: 'none' })
+        );
+      const ChevronUp = ({ size = 24, className = '' }) =>
+        h('svg', { width: size, height: size, viewBox: '0 0 24 24', className, fill: 'none', stroke: 'currentColor', strokeWidth: '2' }, h('path', { d: 'M6 15l6-6 6 6' }));
+      const ChevronDown = ({ size = 24, className = '' }) =>
+        h('svg', { width: size, height: size, viewBox: '0 0 24 24', className, fill: 'none', stroke: 'currentColor', strokeWidth: '2' }, h('path', { d: 'M6 9l6 6 6-6' }));
+      const ChevronLeft = ({ size = 24, className = '' }) =>
+        h('svg', { width: size, height: size, viewBox: '0 0 24 24', className, fill: 'none', stroke: 'currentColor', strokeWidth: '2' }, h('path', { d: 'M15 18l-6-6 6-6' }));
+      const ChevronRight = ({ size = 24, className = '' }) =>
+        h('svg', { width: size, height: size, viewBox: '0 0 24 24', className, fill: 'none', stroke: 'currentColor', strokeWidth: '2' }, h('path', { d: 'M9 18l6-6-6-6' }));
+      const Zap = ({ size = 18 }) =>
+        h(
+          'svg',
+          { width: size, height: size, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: '2' },
+          h('path', { d: 'M13 2L3 14h7l-1 8 10-12h-7l1-8z', fill: 'currentColor', stroke: 'none' })
+        );
+
+      const GRID_SIZE = 25;
+      const CELL_SIZE = 10;
+      const VIEW_SIZE = GRID_SIZE * CELL_SIZE;
+
+      const FractalMutationMobileDemo = () => {
+        const [depth, setDepth] = useState(8);
+        const [angle, setAngle] = useState(25);
+        const [lengthFactor, setLengthFactor] = useState(0.75);
+        const [initialLength, setInitialLength] = useState(100);
+        const [isAnimating, setIsAnimating] = useState(false);
+        const timeRef = useRef(0);
+        const lastFrameTime = useRef(performance.now());
+
+        useEffect(() => {
+          if (!isAnimating) return;
+          let frameId;
+          const loop = (now) => {
+            const delta = (now - lastFrameTime.current) / 1000;
+            lastFrameTime.current = now;
+            timeRef.current += delta;
+            const t = timeRef.current;
+            setAngle(45 + Math.sin(t * 0.7) * 35 + Math.cos(t * 0.4) * 10);
+            setLengthFactor(0.68 + Math.sin(t * 0.5) * 0.12);
+            frameId = requestAnimationFrame(loop);
+          };
+          lastFrameTime.current = performance.now();
+          frameId = requestAnimationFrame(loop);
+          return () => cancelAnimationFrame(frameId);
+        }, [isAnimating]);
+
+        const generateBranches = useMemo(() => {
+          const branches = [];
+          const createBranch = (x, y, len, currentAngle, currentDepth, path) => {
+            if (currentDepth === 0) return;
+            const rad = (currentAngle * Math.PI) / 180;
+            const endX = x + len * Math.sin(rad);
+            const endY = y - len * Math.cos(rad);
+            const strokeWidth = Math.max(0.5, currentDepth * 0.8);
+            const hue = 150 + (1 - currentDepth / depth) * 70;
+            const lightness = 40 + (1 - currentDepth / depth) * 30;
+
+            branches.push(
+              h('line', {
+                key: path,
+                x1: x,
+                y1: y,
+                x2: endX,
+                y2: endY,
+                stroke: `hsl(${hue}, 80%, ${lightness}%)`,
+                strokeWidth: strokeWidth,
+                strokeLinecap: 'round',
+              })
+            );
+
+            createBranch(endX, endY, len * lengthFactor, currentAngle - angle, currentDepth - 1, `${path}-L`);
+            createBranch(endX, endY, len * lengthFactor, currentAngle + angle, currentDepth - 1, `${path}-R`);
+          };
+
+          createBranch(200, 500, initialLength, 0, depth, 'root');
+          return branches;
+        }, [depth, angle, lengthFactor, initialLength]);
+
+        const resetParams = () => {
+          setIsAnimating(false);
+          timeRef.current = 0;
+          setDepth(8);
+          setAngle(25);
+          setLengthFactor(0.75);
+          setInitialLength(100);
+        };
+
+        return h(
+          'div',
+          {
+            className:
+              'h-[100dvh] bg-slate-950 flex flex-col text-slate-200 overflow-hidden selection:bg-teal-500/30 rounded-2xl border border-slate-800',
+          },
+          h(
+            'div',
+            { className: 'flex-1 relative flex items-center justify-center p-4' },
+            h('div', {
+              className:
+                'absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(20,83,45,0.15)_0%,transparent_70%)] pointer-events-none',
+            }),
+            h(
+              'svg',
+              {
+                viewBox: '0 0 400 600',
+                className: 'w-full h-full max-w-md drop-shadow-[0_0_8px_rgba(45,212,191,0.4)]',
+                preserveAspectRatio: 'xMidYMid meet',
+              },
+              generateBranches
+            )
+          ),
+          h(
+            'div',
+            {
+              className:
+                'bg-slate-900/80 backdrop-blur-xl border-t border-slate-800 p-6 rounded-t-[2rem] shrink-0 z-10 shadow-[0_-10px_40px_rgba(0,0,0,0.3)]',
+            },
+            h(
+              'div',
+              { className: 'max-w-md mx-auto' },
+              h(
+                'div',
+                { className: 'flex items-center justify-between mb-6' },
+                h(
+                  'div',
+                  { className: 'flex items-center gap-2 text-teal-400' },
+                  h(Settings2, { size: 20 }),
+                  h('h2', { className: 'text-lg font-bold tracking-wide' }, 'SYSTEM CONTROL')
+                ),
+                h(
+                  'button',
+                  {
+                    onClick: () => setIsAnimating(!isAnimating),
+                    className: `flex items-center gap-2 px-4 py-2 rounded-full font-bold text-sm transition-all duration-300 ${
+                      isAnimating
+                        ? 'bg-rose-500/20 text-rose-400 border border-rose-500/50 shadow-[0_0_15px_rgba(244,63,94,0.3)]'
+                        : 'bg-teal-500 text-slate-950 hover:bg-teal-400 shadow-[0_0_15px_rgba(45,212,191,0.4)]'
+                    }`,
+                  },
+                  isAnimating ? h(Pause, { size: 16 }) : h(Play, { size: 16 }),
+                  isAnimating ? '変異を停止' : '自動変異'
+                )
+              ),
+              h(
+                'div',
+                { className: 'space-y-5' },
+                h(
+                  'div',
+                  { className: 'space-y-1.5' },
+                  h(
+                    'div',
+                    { className: 'flex justify-between text-xs text-slate-400 font-medium' },
+                    h('label', null, '展開角度 (Angle)'),
+                    h('span', { className: 'font-mono text-teal-300' }, `${angle.toFixed(1)}°`)
+                  ),
+                  h('input', {
+                    type: 'range',
+                    min: '5',
+                    max: '90',
+                    step: '0.1',
+                    value: angle,
+                    disabled: isAnimating,
+                    onChange: (e) => setAngle(Number(e.target.value)),
+                    className: 'w-full accent-teal-500 disabled:opacity-50 disabled:cursor-not-allowed',
+                  })
+                ),
+                h(
+                  'div',
+                  { className: 'space-y-1.5' },
+                  h(
+                    'div',
+                    { className: 'flex justify-between text-xs text-slate-400 font-medium' },
+                    h('label', null, '成長率 (Length Factor)'),
+                    h('span', { className: 'font-mono text-teal-300' }, lengthFactor.toFixed(3))
+                  ),
+                  h('input', {
+                    type: 'range',
+                    min: '0.5',
+                    max: '0.85',
+                    step: '0.001',
+                    value: lengthFactor,
+                    disabled: isAnimating,
+                    onChange: (e) => setLengthFactor(Number(e.target.value)),
+                    className: 'w-full accent-teal-500 disabled:opacity-50 disabled:cursor-not-allowed',
+                  })
+                ),
+                h(
+                  'div',
+                  { className: 'flex gap-4 pt-2' },
+                  h(
+                    'div',
+                    { className: 'flex-1 space-y-1.5' },
+                    h(
+                      'div',
+                      { className: 'flex justify-between text-xs text-slate-400 font-medium' },
+                      h('label', null, '深さ'),
+                      h('span', { className: 'font-mono text-teal-300' }, depth)
+                    ),
+                    h('input', {
+                      type: 'range',
+                      min: '1',
+                      max: '10',
+                      value: depth,
+                      disabled: isAnimating,
+                      onChange: (e) => setDepth(Number(e.target.value)),
+                      className: 'w-full accent-teal-500 disabled:opacity-50 disabled:cursor-not-allowed',
+                    })
+                  ),
+                  h(
+                    'button',
+                    {
+                      onClick: resetParams,
+                      disabled: isAnimating,
+                      className:
+                        'mt-5 px-4 bg-slate-800 hover:bg-slate-700 disabled:opacity-50 text-slate-300 rounded-xl transition-colors text-sm flex items-center justify-center border border-slate-700',
+                      'aria-label': 'リセット',
+                    },
+                    h(RefreshCcw, { size: 18 })
+                  )
+                )
+              )
+            )
+          )
+        );
+      };
+
+      const TrochoidMutationMobileDemo = () => {
+        const [R, setR] = useState(120);
+        const [r, setr] = useState(33);
+        const [d, setD] = useState(65);
+        const [isOuter, setIsOuter] = useState(false);
+        const [isAnimating, setIsAnimating] = useState(false);
+        const [svgRotation, setSvgRotation] = useState(0);
+        const timeRef = useRef(0);
+        const lastFrameTime = useRef(performance.now());
+
+        useEffect(() => {
+          if (!isAnimating) return;
+          let frameId;
+          const loop = (now) => {
+            const delta = (now - lastFrameTime.current) / 1000;
+            lastFrameTime.current = now;
+            timeRef.current += delta;
+            const t = timeRef.current;
+            setD(80 + Math.sin(t * 0.8) * 90);
+            setSvgRotation(t * 15);
+            frameId = requestAnimationFrame(loop);
+          };
+          lastFrameTime.current = performance.now();
+          frameId = requestAnimationFrame(loop);
+          return () => cancelAnimationFrame(frameId);
+        }, [isAnimating]);
+
+        const pathData = useMemo(() => {
+          const safeR = Math.max(1, Math.round(R));
+          const safer = Math.max(1, Math.round(r));
+          const rotations = Math.min(150, safer / getGcd(safeR, safer));
+          const maxTheta = 2 * Math.PI * rotations;
+          const resolution = isAnimating ? 0.1 : 0.05;
+          let dString = '';
+          const cx = 200;
+          const cy = 250;
+
+          for (let theta = 0; theta <= maxTheta + resolution; theta += resolution) {
+            let x;
+            let y;
+            if (!isOuter) {
+              x = cx + (safeR - safer) * Math.cos(theta) + d * Math.cos(((safeR - safer) / safer) * theta);
+              y = cy + (safeR - safer) * Math.sin(theta) - d * Math.sin(((safeR - safer) / safer) * theta);
+            } else {
+              x = cx + (safeR + safer) * Math.cos(theta) - d * Math.cos(((safeR + safer) / safer) * theta);
+              y = cy + (safeR + safer) * Math.sin(theta) - d * Math.sin(((safeR + safer) / safer) * theta);
+            }
+            if (theta === 0) dString += `M ${x.toFixed(2)} ${y.toFixed(2)} `;
+            else dString += `L ${x.toFixed(2)} ${y.toFixed(2)} `;
+          }
+          return dString;
+        }, [R, r, d, isOuter, isAnimating]);
+
+        const resetParams = () => {
+          setIsAnimating(false);
+          timeRef.current = 0;
+          setSvgRotation(0);
+          setR(120);
+          setr(33);
+          setD(65);
+          setIsOuter(false);
+        };
+
+        return h(
+          'div',
+          {
+            className:
+              'h-[100dvh] bg-slate-950 flex flex-col text-slate-200 overflow-hidden selection:bg-fuchsia-500/30 rounded-2xl border border-slate-800',
+          },
+          h(
+            'div',
+            { className: 'flex-1 relative flex items-center justify-center p-4' },
+            h('div', {
+              className:
+                'absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(192,38,211,0.08)_0%,transparent_60%)] pointer-events-none',
+            }),
+            h(
+              'svg',
+              {
+                viewBox: '0 0 400 500',
+                className:
+                  'w-full h-full max-w-md drop-shadow-[0_0_12px_rgba(217,70,239,0.3)] transition-transform duration-75',
+                preserveAspectRatio: 'xMidYMid meet',
+                style: { transform: `rotate(${svgRotation}deg)` },
+              },
+              h(
+                'g',
+                { stroke: 'rgba(255,255,255,0.05)', strokeWidth: '1', style: { opacity: isAnimating ? 0.2 : 1 } },
+                h('circle', { cx: '200', cy: '250', r: R, fill: 'none', strokeDasharray: '4 4' }),
+                h('circle', { cx: '200', cy: '250', r: '2', fill: 'rgba(255,255,255,0.2)' })
+              ),
+              h('path', {
+                d: pathData,
+                fill: 'none',
+                stroke: 'url(#neon-gradient)',
+                strokeWidth: isAnimating ? '1.2' : '1',
+                strokeLinejoin: 'round',
+              }),
+              h(
+                'defs',
+                null,
+                h(
+                  'linearGradient',
+                  { id: 'neon-gradient', x1: '0%', y1: '0%', x2: '100%', y2: '100%' },
+                  h('stop', { offset: '0%', stopColor: '#38bdf8' }),
+                  h('stop', { offset: '50%', stopColor: '#c084fc' }),
+                  h('stop', { offset: '100%', stopColor: '#f472b6' })
+                )
+              )
+            )
+          ),
+          h(
+            'div',
+            {
+              className:
+                'bg-slate-900/80 backdrop-blur-xl border-t border-slate-800 p-6 rounded-t-[2rem] shrink-0 z-10 shadow-[0_-10px_40px_rgba(0,0,0,0.4)]',
+            },
+            h(
+              'div',
+              { className: 'max-w-md mx-auto' },
+              h(
+                'div',
+                { className: 'flex items-center justify-between mb-6' },
+                h(
+                  'div',
+                  { className: 'flex items-center gap-2 text-fuchsia-400' },
+                  h(Settings2, { size: 20 }),
+                  h('h2', { className: 'text-lg font-bold tracking-wide' }, 'ORBIT CONTROL')
+                ),
+                h(
+                  'button',
+                  {
+                    onClick: () => setIsAnimating(!isAnimating),
+                    className: `flex items-center gap-2 px-4 py-2 rounded-full font-bold text-sm transition-all duration-300 ${
+                      isAnimating
+                        ? 'bg-amber-500/20 text-amber-400 border border-amber-500/50 shadow-[0_0_15px_rgba(245,158,11,0.3)]'
+                        : 'bg-fuchsia-500 text-slate-950 hover:bg-fuchsia-400 shadow-[0_0_15px_rgba(217,70,239,0.4)]'
+                    }`,
+                  },
+                  isAnimating ? h(Pause, { size: 16 }) : h(Play, { size: 16 }),
+                  isAnimating ? '変異を停止' : '自動変異'
+                )
+              ),
+              h(
+                'div',
+                { className: 'space-y-5' },
+                h(
+                  'div',
+                  { className: 'flex p-1 bg-slate-950 rounded-xl border border-slate-800 relative' },
+                  h(
+                    'button',
+                    {
+                      onClick: () => setIsOuter(false),
+                      disabled: isAnimating,
+                      className: `flex-1 py-2 text-xs font-bold rounded-lg transition-all ${
+                        !isOuter ? 'bg-slate-800 text-fuchsia-300 shadow-sm' : 'text-slate-500 hover:text-slate-300'
+                      } disabled:opacity-50`,
+                    },
+                    '内トロコイド (Hypo)'
+                  ),
+                  h(
+                    'button',
+                    {
+                      onClick: () => setIsOuter(true),
+                      disabled: isAnimating,
+                      className: `flex-1 py-2 text-xs font-bold rounded-lg transition-all ${
+                        isOuter ? 'bg-slate-800 text-fuchsia-300 shadow-sm' : 'text-slate-500 hover:text-slate-300'
+                      } disabled:opacity-50`,
+                    },
+                    '外トロコイド (Epi)'
+                  )
+                ),
+                h(
+                  'div',
+                  { className: 'flex gap-4' },
+                  h(
+                    'div',
+                    { className: 'flex-1 space-y-1.5' },
+                    h(
+                      'div',
+                      { className: 'flex justify-between text-xs text-slate-400 font-medium' },
+                      h('label', null, '固定円 (R)'),
+                      h('span', { className: 'font-mono text-fuchsia-300' }, R)
+                    ),
+                    h('input', {
+                      type: 'range',
+                      min: '10',
+                      max: '200',
+                      value: R,
+                      disabled: isAnimating,
+                      onChange: (e) => setR(Number(e.target.value)),
+                      className: 'w-full accent-fuchsia-500 disabled:opacity-50',
+                    })
+                  ),
+                  h(
+                    'div',
+                    { className: 'flex-1 space-y-1.5' },
+                    h(
+                      'div',
+                      { className: 'flex justify-between text-xs text-slate-400 font-medium' },
+                      h('label', null, '動く円 (r)'),
+                      h('span', { className: 'font-mono text-fuchsia-300' }, r)
+                    ),
+                    h('input', {
+                      type: 'range',
+                      min: '1',
+                      max: '150',
+                      value: r,
+                      disabled: isAnimating,
+                      onChange: (e) => setr(Number(e.target.value)),
+                      className: 'w-full accent-fuchsia-500 disabled:opacity-50',
+                    })
+                  )
+                ),
+                h(
+                  'div',
+                  { className: 'flex gap-4 pt-1' },
+                  h(
+                    'div',
+                    { className: 'flex-1 space-y-1.5' },
+                    h(
+                      'div',
+                      { className: 'flex justify-between text-xs text-slate-400 font-medium' },
+                      h('label', null, 'ペン先距離 (d)'),
+                      h('span', { className: 'font-mono text-fuchsia-300' }, Math.round(d))
+                    ),
+                    h('input', {
+                      type: 'range',
+                      min: '0',
+                      max: '250',
+                      value: d,
+                      disabled: isAnimating,
+                      onChange: (e) => setD(Number(e.target.value)),
+                      className: 'w-full accent-fuchsia-500 disabled:opacity-50',
+                    })
+                  ),
+                  h(
+                    'button',
+                    {
+                      onClick: resetParams,
+                      className:
+                        'mt-5 px-4 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl transition-colors text-sm flex items-center justify-center border border-slate-700',
+                      'aria-label': 'リセット',
+                    },
+                    h(RefreshCcw, { size: 18 })
+                  )
+                )
+              )
+            )
+          )
+        );
+      };
+
+      const PendulumHarmonographDemo = () => {
+        const [f1, setF1] = useState(2.01);
+        const [f2, setF2] = useState(3.0);
+        const [f3, setF3] = useState(3.0);
+        const [f4, setF4] = useState(2.0);
+        const [damping, setDamping] = useState(0.01);
+        const [isAnimating, setIsAnimating] = useState(false);
+        const timeRef = useRef(0);
+        const lastFrameTime = useRef(performance.now());
+
+        useEffect(() => {
+          if (!isAnimating) return;
+          let frameId;
+          const loop = (now) => {
+            const delta = (now - lastFrameTime.current) / 1000;
+            lastFrameTime.current = now;
+            timeRef.current += delta;
+            const t = timeRef.current;
+            setF1(2.0 + Math.sin(t * 0.5) * 0.05);
+            setF2(3.0 + Math.cos(t * 0.4) * 0.05);
+            setF3(3.0 + Math.sin(t * 0.3) * 0.05);
+            setF4(2.0 + Math.cos(t * 0.6) * 0.05);
+            setDamping(Math.max(0.002, 0.01 + Math.sin(t * 0.2) * 0.008));
+            frameId = requestAnimationFrame(loop);
+          };
+          lastFrameTime.current = performance.now();
+          frameId = requestAnimationFrame(loop);
+          return () => cancelAnimationFrame(frameId);
+        }, [isAnimating]);
+
+        const pathData = useMemo(() => {
+          let dString = '';
+          const maxT = isAnimating ? 200 : 300;
+          const resolution = isAnimating ? 0.08 : 0.05;
+          const cx = 200;
+          const cy = 250;
+          const A = 95;
+
+          const p1 = 0;
+          const p2 = Math.PI / 2;
+          const p3 = 0;
+          const p4 = Math.PI / 2;
+
+          for (let t = 0; t <= maxT; t += resolution) {
+            const decay = Math.exp(-damping * t);
+            const x = cx + decay * (A * Math.sin(f1 * t + p1) + A * Math.sin(f2 * t + p2));
+            const y = cy + decay * (A * Math.sin(f3 * t + p3) + A * Math.sin(f4 * t + p4));
+
+            if (t === 0) {
+              dString += `M ${x.toFixed(2)} ${y.toFixed(2)} `;
+            } else {
+              dString += `L ${x.toFixed(2)} ${y.toFixed(2)} `;
+            }
+          }
+
+          return dString;
+        }, [f1, f2, f3, f4, damping, isAnimating]);
+
+        const resetParams = () => {
+          setIsAnimating(false);
+          timeRef.current = 0;
+          setF1(2.01);
+          setF2(3.0);
+          setF3(3.0);
+          setF4(2.0);
+          setDamping(0.01);
+        };
+
+        return h(
+          'div',
+          {
+            className:
+              'h-[100dvh] bg-neutral-950 flex flex-col text-neutral-200 overflow-hidden selection:bg-amber-500/30 rounded-2xl border border-neutral-800',
+          },
+          h(
+            'div',
+            {
+              className: 'flex-1 relative flex items-center justify-center p-4',
+            },
+            h('div', {
+              className:
+                'absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(217,119,6,0.1)_0%,transparent_60%)] pointer-events-none',
+            }),
+            h(
+              'div',
+              {
+                className: 'w-full h-full max-w-md drop-shadow-[0_0_8px_rgba(245,158,11,0.2)] flex items-center justify-center',
+              },
+            h(
+              'svg',
+              {
+                viewBox: '0 0 400 500',
+                className: 'w-full h-full',
+                preserveAspectRatio: 'xMidYMid meet',
+              },
+              h('path', {
+                d: pathData,
+                fill: 'none',
+                stroke: 'url(#amber-gradient)',
+                strokeWidth: isAnimating ? '1.2' : '0.8',
+                style: { mixBlendMode: 'screen' },
+              }),
+              h(
+                'defs',
+                null,
+                h(
+                  'linearGradient',
+                  { id: 'amber-gradient', x1: '0%', y1: '0%', x2: '100%', y2: '100%' },
+                  h('stop', { offset: '0%', stopColor: '#fbbf24' }),
+                  h('stop', { offset: '50%', stopColor: '#ea580c' }),
+                  h('stop', { offset: '100%', stopColor: '#be123c' })
+                )
+              )
+            )
+            )
+          ),
+          h(
+            'div',
+            {
+              className:
+                'bg-neutral-900/80 backdrop-blur-xl border-t border-neutral-800 p-6 rounded-t-[2rem] shrink-0 z-10 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]',
+            },
+            h(
+              'div',
+              { className: 'max-w-md mx-auto' },
+              h(
+                'div',
+                { className: 'flex items-center justify-between mb-6' },
+                h(
+                  'div',
+                  { className: 'flex items-center gap-2 text-amber-500' },
+                  h(Settings2, { size: 20 }),
+                  h('h2', { className: 'text-lg font-bold tracking-wide' }, 'RESONANCE')
+                ),
+                h(
+                  'button',
+                  {
+                    onClick: () => setIsAnimating(!isAnimating),
+                    className: `flex items-center gap-2 px-4 py-2 rounded-full font-bold text-sm transition-all duration-300 ${
+                      isAnimating
+                        ? 'bg-rose-500/20 text-rose-400 border border-rose-500/50 shadow-[0_0_15px_rgba(225,29,72,0.3)]'
+                        : 'bg-amber-500 text-neutral-950 hover:bg-amber-400 shadow-[0_0_15px_rgba(245,158,11,0.4)]'
+                    }`,
+                  },
+                  isAnimating ? h(Pause, { size: 16 }) : h(Play, { size: 16 }),
+                  isAnimating ? '変異を停止' : '自動変異'
+                )
+              ),
+              h(
+                'div',
+                { className: 'space-y-4' },
+                h(
+                  'div',
+                  { className: 'flex gap-4' },
+                  h(
+                    'div',
+                    { className: 'flex-1 space-y-1.5' },
+                    h(
+                      'div',
+                      { className: 'flex justify-between text-xs text-neutral-400 font-medium' },
+                      h('label', null, 'X軸周波 1'),
+                      h('span', { className: 'font-mono text-amber-300' }, f1.toFixed(3))
+                    ),
+                    h('input', {
+                      type: 'range',
+                      min: '1',
+                      max: '5',
+                      step: '0.001',
+                      value: f1,
+                      disabled: isAnimating,
+                      onChange: (e) => setF1(Number(e.target.value)),
+                      className: 'w-full accent-amber-500 disabled:opacity-50',
+                    })
+                  ),
+                  h(
+                    'div',
+                    { className: 'flex-1 space-y-1.5' },
+                    h(
+                      'div',
+                      { className: 'flex justify-between text-xs text-neutral-400 font-medium' },
+                      h('label', null, 'X軸周波 2'),
+                      h('span', { className: 'font-mono text-amber-300' }, f2.toFixed(3))
+                    ),
+                    h('input', {
+                      type: 'range',
+                      min: '1',
+                      max: '5',
+                      step: '0.001',
+                      value: f2,
+                      disabled: isAnimating,
+                      onChange: (e) => setF2(Number(e.target.value)),
+                      className: 'w-full accent-amber-500 disabled:opacity-50',
+                    })
+                  )
+                ),
+                h(
+                  'div',
+                  { className: 'flex gap-4' },
+                  h(
+                    'div',
+                    { className: 'flex-1 space-y-1.5' },
+                    h(
+                      'div',
+                      { className: 'flex justify-between text-xs text-neutral-400 font-medium' },
+                      h('label', null, 'Y軸周波 3'),
+                      h('span', { className: 'font-mono text-orange-400' }, f3.toFixed(3))
+                    ),
+                    h('input', {
+                      type: 'range',
+                      min: '1',
+                      max: '5',
+                      step: '0.001',
+                      value: f3,
+                      disabled: isAnimating,
+                      onChange: (e) => setF3(Number(e.target.value)),
+                      className: 'w-full accent-orange-500 disabled:opacity-50',
+                    })
+                  ),
+                  h(
+                    'div',
+                    { className: 'flex-1 space-y-1.5' },
+                    h(
+                      'div',
+                      { className: 'flex justify-between text-xs text-neutral-400 font-medium' },
+                      h('label', null, 'Y軸周波 4'),
+                      h('span', { className: 'font-mono text-orange-400' }, f4.toFixed(3))
+                    ),
+                    h('input', {
+                      type: 'range',
+                      min: '1',
+                      max: '5',
+                      step: '0.001',
+                      value: f4,
+                      disabled: isAnimating,
+                      onChange: (e) => setF4(Number(e.target.value)),
+                      className: 'w-full accent-orange-500 disabled:opacity-50',
+                    })
+                  )
+                ),
+                h(
+                  'div',
+                  { className: 'flex gap-4 pt-2' },
+                  h(
+                    'div',
+                    { className: 'flex-1 space-y-1.5' },
+                    h(
+                      'div',
+                      { className: 'flex justify-between text-xs text-neutral-400 font-medium' },
+                      h('label', null, '減衰率 (線の密度)'),
+                      h('span', { className: 'font-mono text-amber-300' }, damping.toFixed(4))
+                    ),
+                    h('input', {
+                      type: 'range',
+                      min: '0.001',
+                      max: '0.03',
+                      step: '0.001',
+                      value: damping,
+                      disabled: isAnimating,
+                      onChange: (e) => setDamping(Number(e.target.value)),
+                      className: 'w-full accent-amber-500 disabled:opacity-50',
+                    })
+                  ),
+                  h(
+                    'button',
+                    {
+                      onClick: resetParams,
+                      className:
+                        'mt-5 px-4 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 rounded-xl transition-colors text-sm flex items-center justify-center border border-neutral-700',
+                      'aria-label': 'リセット',
+                    },
+                    h(RefreshCcw, { size: 18 })
+                  )
+                )
+              )
+            )
+          )
+        );
+      };
+
+      const LlmEngineMobileDemo = () => {
+        const [isPlaying, setIsPlaying] = useState(false);
+        const [isAutoTemp, setIsAutoTemp] = useState(false);
+        const [speedLevel, setSpeedLevel] = useState(3);
+        const [temperature, setTemperature] = useState(1.0);
+        const [phase, setPhase] = useState(0);
+        const [storyIndex, setStoryIndex] = useState(0);
+        const speedMs = [1200, 800, 500, 250, 100][speedLevel - 1];
+        const timeRef = useRef(0);
+        const lastFrameTime = useRef(performance.now());
+
+        useEffect(() => {
+          if (!isAutoTemp) return;
+          let frameId;
+          const loop = (now) => {
+            const delta = (now - lastFrameTime.current) / 1000;
+            lastFrameTime.current = now;
+            timeRef.current += delta;
+            setTemperature(1.0 + Math.sin(timeRef.current * 0.5) * 0.8);
+            frameId = requestAnimationFrame(loop);
+          };
+          lastFrameTime.current = performance.now();
+          frameId = requestAnimationFrame(loop);
+          return () => cancelAnimationFrame(frameId);
+        }, [isAutoTemp]);
+
+        useEffect(() => {
+          if (!isPlaying) return;
+          const timer = setTimeout(() => {
+            setPhase((prevPhase) => {
+              if (prevPhase === 6) {
+                setStoryIndex((prev) => (prev + 1) % (STORY.length - 1));
+                return 0;
+              }
+              return prevPhase + 1;
+            });
+          }, speedMs);
+          return () => clearTimeout(timer);
+        }, [isPlaying, phase, speedMs, storyIndex]);
+
+        const handleAutoMode = () => {
+          if (isAutoTemp) {
+            setIsAutoTemp(false);
+            setIsPlaying(false);
+          } else {
+            setIsAutoTemp(true);
+            setIsPlaying(true);
+          }
+        };
+
+        const resetProcess = () => {
+          setIsPlaying(false);
+          setIsAutoTemp(false);
+          timeRef.current = 0;
+          setPhase(0);
+          setStoryIndex(0);
+          setTemperature(1.0);
+        };
+
+        const calculatedProbs = useMemo(() => {
+          const currentStep = STORY[storyIndex];
+          if (!currentStep) return [];
+          const t = Math.max(0.1, temperature);
+          const entries = Object.entries(currentStep.probs);
+          const expVals = entries.map(([word, p]) => {
+            const safeP = Math.max(0.00001, p);
+            const val = Math.exp(Math.max(-20, Math.log(safeP) / t));
+            return { word, val };
+          });
+          const sum = expVals.reduce((acc, curr) => acc + curr.val, 0);
+          return expVals.map((item) => ({ word: item.word, p: item.val / sum })).sort((a, b) => b.p - a.p);
+        }, [storyIndex, temperature]);
+
+        const { nodes, edges } = useMemo(() => {
+          const layers = 4;
+          const nodesPerLayer = 6;
+          const nList = [];
+          const eList = [];
+          for (let l = 0; l < layers; l++) {
+            for (let n = 0; n < nodesPerLayer; n++) {
+              nList.push({ id: `l${l}n${n}`, l, n, x: 50 + n * 60, y: 150 + l * 75 });
+            }
+          }
+          for (let l = 0; l < layers - 1; l++) {
+            for (let n1 = 0; n1 < nodesPerLayer; n1++) {
+              for (let n2 = 0; n2 < nodesPerLayer; n2++) {
+                eList.push({
+                  id: `e${l}_${n1}_${n2}`,
+                  l,
+                  x1: 50 + n1 * 60,
+                  y1: 150 + l * 75,
+                  x2: 50 + n2 * 60,
+                  y2: 150 + (l + 1) * 75,
+                });
+              }
+            }
+          }
+          return { nodes: nList, edges: eList };
+        }, []);
+
+        const getNodeFill = (l) => {
+          if (phase === 0 && l === 0) return '#06b6d4';
+          if (phase === 1 && l === 1) return '#3b82f6';
+          if (phase === 2 && l === 2) return '#8b5cf6';
+          if (phase === 3 && l === 3) return '#d946ef';
+          return '#1e293b';
+        };
+        const getEdgeStroke = (l) => {
+          if (phase === 1 && l === 0) return 'rgba(6, 182, 212, 0.6)';
+          if (phase === 2 && l === 1) return 'rgba(59, 130, 246, 0.6)';
+          if (phase === 3 && l === 2) return 'rgba(139, 92, 246, 0.6)';
+          return 'rgba(30, 41, 59, 0.3)';
+        };
+
+        const fullText = STORY.slice(0, storyIndex + 1)
+          .map((s) => s.token)
+          .join('');
+        const displayText = fullText.length > 20 ? `...${fullText.slice(-20)}` : fullText;
+        const recentContext = STORY.slice(Math.max(0, storyIndex - 2), storyIndex + 1);
+
+        return h(
+          'div',
+          {
+            className:
+              'h-[100dvh] bg-slate-950 flex flex-col text-slate-200 overflow-hidden selection:bg-cyan-500/30 rounded-2xl border border-slate-800',
+          },
+          h(
+            'div',
+            { className: 'px-6 pt-8 pb-4 z-10 shrink-0' },
+            h(
+              'div',
+              { className: 'bg-slate-900/50 border border-slate-800 rounded-2xl p-4 shadow-[0_4px_20px_rgba(0,0,0,0.3)] backdrop-blur-md' },
+              h('div', { className: 'text-xs font-bold text-slate-500 mb-1 tracking-wider' }, 'GENERATED SEQUENCE'),
+              h(
+                'p',
+                { className: 'text-xl font-serif text-slate-100 tracking-wide break-all h-8 flex items-center' },
+                displayText,
+                h('span', {
+                  className: `inline-block w-2.5 h-6 bg-cyan-400 ml-1 rounded-sm shadow-[0_0_8px_rgba(34,211,238,0.8)] transition-opacity duration-200 ${
+                    isPlaying && phase % 2 === 0 ? 'opacity-100' : 'opacity-20'
+                  }`,
+                })
+              )
+            )
+          ),
+          h(
+            'div',
+            { className: 'flex-1 min-h-0 relative flex items-center justify-center p-2' },
+            h('div', {
+              className: 'absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(6,182,212,0.08)_0%,transparent_70%)] pointer-events-none',
+            }),
+            h(
+              'svg',
+              {
+                viewBox: '0 0 400 650',
+                className: 'w-full h-full max-w-md drop-shadow-[0_0_12px_rgba(6,182,212,0.15)]',
+                preserveAspectRatio: 'xMidYMid meet',
+              },
+              h(
+                'g',
+                { transform: 'translate(0, 30)' },
+                h('text', { x: '200', y: '0', fontSize: '12', fill: '#64748b', textAnchor: 'middle', fontWeight: 'bold' }, 'INPUT CONTEXT'),
+                ...recentContext.map((item, idx) => {
+                  const isCurrent = idx === recentContext.length - 1;
+                  const xPos = 200 - recentContext.length * 40 + idx * 80;
+                  return h(
+                    'g',
+                    { key: `ctx-${idx}-${item.token}`, transform: `translate(${xPos}, 15)` },
+                    h('rect', {
+                      x: '0',
+                      y: '0',
+                      width: '70',
+                      height: '28',
+                      rx: '6',
+                      fill: isCurrent && phase === 0 ? 'rgba(6,182,212,0.2)' : '#0f172a',
+                      stroke: isCurrent && phase === 0 ? '#22d3ee' : '#334155',
+                      strokeWidth: isCurrent && phase === 0 ? '2' : '1',
+                    }),
+                    h('text', { x: '35', y: '19', fontSize: '14', fill: '#e2e8f0', textAnchor: 'middle' }, item.token)
+                  );
+                })
+              ),
+              h(
+                'g',
+                null,
+                h('text', { x: '200', y: '125', fontSize: '12', fill: '#64748b', textAnchor: 'middle', fontWeight: 'bold' }, 'ATTENTION NETWORK'),
+                ...edges.map((e) =>
+                  h('line', {
+                    key: e.id,
+                    x1: e.x1,
+                    y1: e.y1,
+                    x2: e.x2,
+                    y2: e.y2,
+                    stroke: getEdgeStroke(e.l),
+                    strokeWidth: phase > 0 && phase - 1 === e.l ? '1.5' : '0.5',
+                  })
+                ),
+                ...nodes.map((n) => h('circle', { key: n.id, cx: n.x, cy: n.y, r: phase === n.l ? '7' : '5', fill: getNodeFill(n.l) }))
+              ),
+              h(
+                'g',
+                { transform: 'translate(0, 440)', opacity: phase >= 4 ? 1 : 0.2 },
+                h('text', { x: '200', y: '0', fontSize: '12', fill: '#64748b', textAnchor: 'middle', fontWeight: 'bold' }, 'PROBABILITY DISTRIBUTION'),
+                ...calculatedProbs.slice(0, 4).map((item, idx) => {
+                  const isSelected = phase >= 5 && idx === 0;
+                  return h(
+                    'g',
+                    { key: `prob-${idx}`, transform: `translate(40, ${15 + idx * 40})` },
+                    h('rect', { x: '0', y: '0', width: '320', height: '30', fill: '#0f172a', rx: '6', stroke: '#1e293b' }),
+                    h('rect', {
+                      x: '0',
+                      y: '0',
+                      width: phase >= 4 ? item.p * 320 : 0,
+                      height: '30',
+                      fill: isSelected ? '#d946ef' : '#3b82f6',
+                      rx: '6',
+                    }),
+                    h('text', { x: '12', y: '20', fontSize: '14', fill: '#ffffff', fontWeight: isSelected ? 'bold' : 'normal' }, item.word),
+                    h('text', { x: '310', y: '20', fontSize: '12', fill: isSelected ? '#fdf4ff' : '#94a3b8', textAnchor: 'end' }, `${(item.p * 100).toFixed(1)}%`)
+                  );
+                })
+              ),
+              h('path', {
+                d: 'M 360 460 C 430 460, 430 40, 270 40',
+                fill: 'none',
+                stroke: 'url(#neon-gradient)',
+                strokeWidth: '3',
+                strokeDasharray: '6 6',
+                markerEnd: 'url(#arrow)',
+                opacity: phase === 6 ? 1 : 0,
+              }),
+              h(
+                'defs',
+                null,
+                h(
+                  'linearGradient',
+                  { id: 'neon-gradient', x1: '0%', y1: '100%', x2: '0%', y2: '0%' },
+                  h('stop', { offset: '0%', stopColor: '#d946ef' }),
+                  h('stop', { offset: '50%', stopColor: '#3b82f6' }),
+                  h('stop', { offset: '100%', stopColor: '#06b6d4' })
+                ),
+                h(
+                  'marker',
+                  { id: 'arrow', viewBox: '0 0 10 10', refX: '8', refY: '5', markerWidth: '6', markerHeight: '6', orient: 'auto' },
+                  h('path', { d: 'M 0 0 L 10 5 L 0 10 z', fill: '#06b6d4' })
+                )
+              )
+            )
+          ),
+          h(
+            'div',
+            {
+              className:
+                'bg-slate-900/80 backdrop-blur-xl border-t border-slate-800 p-6 rounded-t-[2rem] shrink-0 z-10 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]',
+            },
+            h(
+              'div',
+              { className: 'max-w-md mx-auto' },
+              h(
+                'div',
+                { className: 'flex items-center justify-between mb-6' },
+                h(
+                  'div',
+                  { className: 'flex items-center gap-2 text-cyan-400' },
+                  h(Settings2, { size: 20 }),
+                  h('h2', { className: 'text-lg font-bold tracking-wide' }, 'LLM ENGINE')
+                ),
+                h(
+                  'button',
+                  {
+                    onClick: handleAutoMode,
+                    className: `flex items-center gap-2 px-4 py-2 rounded-full font-bold text-sm transition-all duration-300 ${
+                      isAutoTemp
+                        ? 'bg-fuchsia-500/20 text-fuchsia-400 border border-fuchsia-500/50 shadow-[0_0_15px_rgba(217,70,239,0.3)]'
+                        : 'bg-cyan-500 text-slate-950 hover:bg-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.4)]'
+                    }`,
+                  },
+                  isAutoTemp ? h(Sparkles, { size: 16 }) : h(Play, { size: 16 }),
+                  'AUTO TUNE'
+                )
+              ),
+              h(
+                'div',
+                { className: 'space-y-5' },
+                h(
+                  'div',
+                  { className: 'flex gap-4' },
+                  h(
+                    'div',
+                    { className: 'flex-1 space-y-1.5' },
+                    h(
+                      'div',
+                      { className: 'flex justify-between text-xs text-slate-400 font-medium' },
+                      h('label', null, '温度 (Temperature)'),
+                      h('span', { className: 'font-mono text-cyan-300' }, temperature.toFixed(2))
+                    ),
+                    h('input', {
+                      type: 'range',
+                      min: '0.1',
+                      max: '2.0',
+                      step: '0.01',
+                      value: temperature,
+                      disabled: isAutoTemp,
+                      onChange: (e) => setTemperature(Number(e.target.value)),
+                      className: 'w-full accent-cyan-500 disabled:opacity-50',
+                    })
+                  )
+                ),
+                h(
+                  'div',
+                  { className: 'flex gap-4 pt-1 items-end' },
+                  h(
+                    'div',
+                    { className: 'flex-1 space-y-1.5' },
+                    h(
+                      'div',
+                      { className: 'flex justify-between text-xs text-slate-400 font-medium' },
+                      h('label', null, '演算速度 (Speed)'),
+                      h('span', { className: 'font-mono text-cyan-300' }, `Lv.${speedLevel}`)
+                    ),
+                    h('input', {
+                      type: 'range',
+                      min: '1',
+                      max: '5',
+                      value: speedLevel,
+                      onChange: (e) => setSpeedLevel(Number(e.target.value)),
+                      className: 'w-full accent-cyan-500',
+                    })
+                  ),
+                  h(
+                    'div',
+                    { className: 'flex gap-2' },
+                    h(
+                      'button',
+                      {
+                        onClick: () => setIsPlaying(!isPlaying),
+                        disabled: isAutoTemp,
+                        className:
+                          'px-4 py-2 bg-slate-800 hover:bg-slate-700 disabled:opacity-50 text-slate-300 rounded-xl transition-colors text-sm flex items-center justify-center border border-slate-700',
+                        'aria-label': '手動再生',
+                      },
+                      isPlaying && !isAutoTemp ? h(Pause, { size: 18 }) : h(Play, { size: 18 })
+                    ),
+                    h(
+                      'button',
+                      {
+                        onClick: resetProcess,
+                        className:
+                          'px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl transition-colors text-sm flex items-center justify-center border border-slate-700',
+                        'aria-label': 'リセット',
+                      },
+                      h(RefreshCcw, { size: 18 })
+                    )
+                  )
+                ),
+                h('div', { className: 'pt-2 text-[10px] text-slate-500 text-center tracking-widest' }, `PHASE: ${phase} / AUTO-REGRESSIVE LOOP`)
+              )
+            )
+          )
+        );
+      };
+
+      const NeuralMazeDemo = () => {
+        const [maze, setMaze] = useState([]);
+        const [player, setPlayer] = useState({ x: 1, y: 1 });
+        const [goal] = useState({ x: GRID_SIZE - 2, y: GRID_SIZE - 2 });
+        const [status, setStatus] = useState('playing');
+        const [solutionPath, setSolutionPath] = useState('');
+        const [pathLength, setPathLength] = useState(0);
+
+        const generateMaze = useCallback(() => {
+          const grid = Array(GRID_SIZE)
+            .fill(null)
+            .map(() => Array(GRID_SIZE).fill(1));
+
+          const carve = (x, y) => {
+            grid[y][x] = 0;
+            const directions = [
+              [0, -2],
+              [0, 2],
+              [-2, 0],
+              [2, 0],
+            ];
+            directions.sort(() => Math.random() - 0.5);
+            for (const [dx, dy] of directions) {
+              const nx = x + dx;
+              const ny = y + dy;
+              if (nx > 0 && nx < GRID_SIZE - 1 && ny > 0 && ny < GRID_SIZE - 1 && grid[ny][nx] === 1) {
+                grid[y + dy / 2][x + dx / 2] = 0;
+                carve(nx, ny);
+              }
+            }
+          };
+
+          carve(1, 1);
+          grid[GRID_SIZE - 2][GRID_SIZE - 2] = 0;
+          grid[GRID_SIZE - 3][GRID_SIZE - 2] = 0;
+          grid[GRID_SIZE - 2][GRID_SIZE - 3] = 0;
+          setMaze(grid);
+          setPlayer({ x: 1, y: 1 });
+          setStatus('playing');
+          setSolutionPath('');
+          setPathLength(0);
+        }, []);
+
+        useEffect(() => {
+          generateMaze();
+        }, [generateMaze]);
+
+        const movePlayer = useCallback(
+          (dx, dy) => {
+            if (status !== 'playing') return;
+            const nx = player.x + dx;
+            const ny = player.y + dy;
+            if (maze[ny] && maze[ny][nx] === 0) {
+              setPlayer({ x: nx, y: ny });
+              if (nx === goal.x && ny === goal.y) setStatus('won');
+            }
+          },
+          [player, maze, status, goal]
+        );
+
+        useEffect(() => {
+          const handleKeyDown = (e) => {
+            if (e.key === 'ArrowUp') movePlayer(0, -1);
+            if (e.key === 'ArrowDown') movePlayer(0, 1);
+            if (e.key === 'ArrowLeft') movePlayer(-1, 0);
+            if (e.key === 'ArrowRight') movePlayer(1, 0);
+          };
+          window.addEventListener('keydown', handleKeyDown);
+          return () => window.removeEventListener('keydown', handleKeyDown);
+        }, [movePlayer]);
+
+        const solveMaze = () => {
+          if (status === 'won' || status === 'showing_answer') return;
+          setStatus('showing_answer');
+          const queue = [{ x: player.x, y: player.y, path: [] }];
+          const visited = Array(GRID_SIZE)
+            .fill(null)
+            .map(() => Array(GRID_SIZE).fill(false));
+          visited[player.y][player.x] = true;
+          let finalPath = [];
+
+          while (queue.length > 0) {
+            const current = queue.shift();
+            const { x, y, path } = current;
+            const newPath = [...path, { x, y }];
+            if (x === goal.x && y === goal.y) {
+              finalPath = newPath;
+              break;
+            }
+            const neighbors = [
+              { x, y: y - 1 },
+              { x, y: y + 1 },
+              { x: x - 1, y },
+              { x: x + 1, y },
+            ];
+            for (const n of neighbors) {
+              if (maze[n.y] && maze[n.y][n.x] === 0 && !visited[n.y][n.x]) {
+                visited[n.y][n.x] = true;
+                queue.push({ x: n.x, y: n.y, path: newPath });
+              }
+            }
+          }
+
+          if (finalPath.length > 0) {
+            const d = finalPath
+              .map((p, index) => {
+                const cx = p.x * CELL_SIZE + CELL_SIZE / 2;
+                const cy = p.y * CELL_SIZE + CELL_SIZE / 2;
+                return `${index === 0 ? 'M' : 'L'} ${cx} ${cy}`;
+              })
+              .join(' ');
+            setSolutionPath(d);
+            setPathLength(finalPath.length * CELL_SIZE);
+          }
+        };
+
+        const walls = maze.flatMap((row, y) =>
+          row.map((cell, x) =>
+            cell === 1
+              ? h('rect', {
+                  key: `${x}-${y}`,
+                  x: x * CELL_SIZE,
+                  y: y * CELL_SIZE,
+                  width: CELL_SIZE,
+                  height: CELL_SIZE,
+                  fill: '#1e293b',
+                  stroke: '#0f172a',
+                  strokeWidth: '0.5',
+                })
+              : null
+          )
+        );
+
+        return h(
+          'div',
+          {
+            className:
+              'h-[100dvh] bg-slate-950 flex flex-col text-slate-200 overflow-hidden selection:bg-cyan-500/30 rounded-2xl border border-slate-800',
+          },
+          h(
+            'div',
+            { className: 'px-6 pt-6 pb-2 shrink-0 flex items-center justify-between z-10' },
+            h(
+              'div',
+              { className: 'flex items-center gap-2 text-cyan-400' },
+              h(Cpu, { size: 20 }),
+              h('h1', { className: 'text-base font-bold tracking-widest' }, 'NEURAL MAZE')
+            ),
+            h(
+              'div',
+              { className: 'text-xs font-bold tracking-widest text-slate-500' },
+              status === 'playing' && 'STATUS: EXPLORING',
+              status === 'showing_answer' && h('span', { className: 'text-fuchsia-400' }, 'STATUS: AI OVERRIDE'),
+              status === 'won' && h('span', { className: 'text-emerald-400' }, 'STATUS: MISSION CLEARED')
+            )
+          ),
+          h(
+            'div',
+            { className: 'flex-1 relative flex items-center justify-center p-4' },
+            h('div', {
+              className: 'absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(6,182,212,0.05)_0%,transparent_70%)] pointer-events-none',
+            }),
+            h(
+              'div',
+              {
+                className: `relative w-full max-w-md aspect-square rounded-xl overflow-hidden border border-slate-800 bg-slate-900 transition-all duration-500 ${
+                  status === 'won' ? 'shadow-[0_0_30px_rgba(16,185,129,0.2)] border-emerald-900/50' : 'shadow-[0_0_20px_rgba(0,0,0,0.5)]'
+                }`,
+              },
+              h(
+                'svg',
+                { viewBox: `0 0 ${VIEW_SIZE} ${VIEW_SIZE}`, className: 'w-full h-full' },
+                h(
+                  'defs',
+                  null,
+                  h(
+                    'linearGradient',
+                    { id: 'ai-path-gradient', x1: '0%', y1: '0%', x2: '100%', y2: '100%' },
+                    h('stop', { offset: '0%', stopColor: '#22d3ee' }),
+                    h('stop', { offset: '50%', stopColor: '#8b5cf6' }),
+                    h('stop', { offset: '100%', stopColor: '#d946ef' })
+                  )
+                ),
+                ...walls,
+                h('rect', {
+                  x: goal.x * CELL_SIZE + 1,
+                  y: goal.y * CELL_SIZE + 1,
+                  width: CELL_SIZE - 2,
+                  height: CELL_SIZE - 2,
+                  fill: '#d946ef',
+                  className: 'animate-pulse',
+                }),
+                solutionPath &&
+                  h(
+                    'g',
+                    null,
+                    h('path', {
+                      d: solutionPath,
+                      fill: 'none',
+                      stroke: '#8b5cf6',
+                      strokeWidth: CELL_SIZE * 0.8,
+                      strokeLinecap: 'round',
+                      strokeLinejoin: 'round',
+                      opacity: 0.4,
+                      style: {
+                        strokeDasharray: pathLength,
+                        strokeDashoffset: pathLength,
+                        animation: `drawPath ${pathLength / 160}s ease-in-out forwards`,
+                      },
+                    }),
+                    h('path', {
+                      d: solutionPath,
+                      fill: 'none',
+                      stroke: 'url(#ai-path-gradient)',
+                      strokeWidth: CELL_SIZE * 0.4,
+                      strokeLinecap: 'round',
+                      strokeLinejoin: 'round',
+                      style: {
+                        strokeDasharray: pathLength,
+                        strokeDashoffset: pathLength,
+                        animation: `drawPath ${pathLength / 160}s ease-in-out forwards`,
+                      },
+                    }),
+                    h(
+                      'circle',
+                      { r: CELL_SIZE * 0.4, fill: '#ffffff', style: { filter: 'drop-shadow(0 0 6px #ffffff)' } },
+                      h('animateMotion', {
+                        dur: `${pathLength / 160}s`,
+                        path: solutionPath,
+                        fill: 'freeze',
+                        calcMode: 'linear',
+                      }),
+                      h('animate', {
+                        attributeName: 'opacity',
+                        values: '1;0',
+                        begin: `${pathLength / 160}s`,
+                        dur: '0.4s',
+                        fill: 'freeze',
+                      })
+                    )
+                  ),
+                h('circle', {
+                  cx: player.x * CELL_SIZE + CELL_SIZE / 2,
+                  cy: player.y * CELL_SIZE + CELL_SIZE / 2,
+                  r: CELL_SIZE * 0.4,
+                  fill: '#22d3ee',
+                  style: { filter: 'drop-shadow(0 0 4px rgba(34,211,238,0.8))' },
+                })
+              )
+            )
+          ),
+          h(
+            'div',
+            {
+              className:
+                'bg-slate-900/90 backdrop-blur-xl border-t border-slate-800 p-6 rounded-t-[2.5rem] shrink-0 z-10 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]',
+            },
+            h(
+              'div',
+              { className: 'max-w-md mx-auto flex flex-col items-center gap-6' },
+              h(
+                'div',
+                { className: 'relative w-40 h-40' },
+                h(
+                  'button',
+                  {
+                    onClick: () => movePlayer(0, -1),
+                    className:
+                      'absolute top-0 left-1/2 -translate-x-1/2 w-12 h-14 bg-slate-800 hover:bg-slate-700 rounded-t-xl flex items-center justify-center border border-slate-700',
+                  },
+                  h(ChevronUp, { size: 24, className: 'text-slate-400' })
+                ),
+                h(
+                  'button',
+                  {
+                    onClick: () => movePlayer(0, 1),
+                    className:
+                      'absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-14 bg-slate-800 hover:bg-slate-700 rounded-b-xl flex items-center justify-center border border-slate-700',
+                  },
+                  h(ChevronDown, { size: 24, className: 'text-slate-400' })
+                ),
+                h(
+                  'button',
+                  {
+                    onClick: () => movePlayer(-1, 0),
+                    className:
+                      'absolute left-0 top-1/2 -translate-y-1/2 w-14 h-12 bg-slate-800 hover:bg-slate-700 rounded-l-xl flex items-center justify-center border border-slate-700',
+                  },
+                  h(ChevronLeft, { size: 24, className: 'text-slate-400' })
+                ),
+                h(
+                  'button',
+                  {
+                    onClick: () => movePlayer(1, 0),
+                    className:
+                      'absolute right-0 top-1/2 -translate-y-1/2 w-14 h-12 bg-slate-800 hover:bg-slate-700 rounded-r-xl flex items-center justify-center border border-slate-700',
+                  },
+                  h(ChevronRight, { size: 24, className: 'text-slate-400' })
+                ),
+                h(
+                  'div',
+                  { className: 'absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 bg-slate-900 rounded-full flex items-center justify-center' },
+                  h(Navigation, { size: 16, className: status === 'won' ? 'text-emerald-500' : 'text-slate-700' })
+                )
+              ),
+              h(
+                'div',
+                { className: 'flex w-full gap-4' },
+                h(
+                  'button',
+                  {
+                    onClick: solveMaze,
+                    disabled: status !== 'playing',
+                    className:
+                      'flex-1 py-3 px-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 bg-slate-800 text-fuchsia-400 border border-fuchsia-500/30 hover:bg-fuchsia-950/50 disabled:opacity-50 disabled:cursor-not-allowed',
+                  },
+                  h(Zap, { size: 18 }),
+                  'AIに解答させる'
+                ),
+                h(
+                  'button',
+                  {
+                    onClick: generateMaze,
+                    className:
+                      'w-14 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-2xl transition-colors flex items-center justify-center border border-slate-700',
+                    'aria-label': '再生成',
+                  },
+                  h(RefreshCcw, { size: 18 })
+                )
+              )
+            )
+          ),
+          h(
+            'style',
+            null,
+            `@keyframes drawPath { to { stroke-dashoffset: 0; } }`
+          )
+        );
+      };
+
+      const App = () => {
+        const samples = [
+          { id: 'fractal-mutation-mobile', label: '1. Fractal Mutation', component: FractalMutationMobileDemo },
+          { id: 'trochoid-mutation-mobile', label: '2. Trochoid Mutation', component: TrochoidMutationMobileDemo },
+          { id: 'pendulum-harmonograph', label: '3. Harmonograph', component: PendulumHarmonographDemo },
+          { id: 'llm-engine-mobile', label: '4. LLM Engine', component: LlmEngineMobileDemo },
+          { id: 'neural-maze', label: '5. Neural Maze', component: NeuralMazeDemo },
+        ];
+
+        const [activeId, setActiveId] = useState(null);
+        const [showChoice, setShowChoice] = useState(false);
+        const activeSample = samples.find((sample) => sample.id === activeId);
+
+        if (!activeSample) {
+          return h(
+            'div',
+            {
+              className:
+                'h-[100dvh] bg-slate-950 text-slate-100 p-6 flex flex-col items-center justify-center selection:bg-cyan-500/30',
+            },
+            h(
+              'div',
+              {
+                className:
+                  'w-full max-w-md rounded-3xl border border-slate-800 bg-slate-900/70 backdrop-blur-xl p-6 shadow-[0_20px_60px_rgba(0,0,0,0.45)]',
+              },
+              h('h1', { className: 'text-2xl font-bold tracking-tight mb-5 text-center' }, 'SVGアニメーションのサンプル集'),
+              h(
+                'div',
+                { className: 'space-y-3' },
+                ...samples.map((sample, idx) =>
+                  h(
+                    'button',
+                    {
+                      key: sample.id,
+                      onClick: () => setActiveId(sample.id),
+                      className:
+                        'w-full text-left rounded-2xl border border-slate-700 bg-gradient-to-r from-slate-900 to-slate-800 px-4 py-4 hover:from-cyan-900/40 hover:to-fuchsia-900/30 transition-all',
+                    },
+                    h('div', { className: 'text-sm text-slate-400' }, `Sample ${idx + 1}`),
+                    h('div', { className: 'text-base font-semibold mt-0.5' }, sample.label)
+                  )
+                )
+              )
+            )
+          );
+        }
+
+        return h(
+          'div',
+          { className: 'h-[100dvh] relative' },
+          h(activeSample.component),
+          h('button', {
+            onClick: () => setShowChoice(true),
+            'aria-label': 'メニュー表示オプション',
+            className: 'absolute left-1/2 top-[45%] -translate-x-1/2 -translate-y-1/2 w-[62%] h-[30%] bg-transparent z-20',
+          }),
+          showChoice &&
+            h(
+              'div',
+              { className: 'absolute inset-0 z-30 bg-slate-950/70 backdrop-blur-md flex items-center justify-center p-6' },
+              h(
+                'div',
+                {
+                  className:
+                    'w-full max-w-sm rounded-3xl border border-slate-700 bg-slate-900/95 p-5 shadow-[0_20px_60px_rgba(0,0,0,0.55)]',
+                },
+                h('h3', { className: 'text-center text-lg font-bold text-slate-100 mb-4' }, '操作を選択'),
+                h(
+                  'div',
+                  { className: 'grid grid-cols-2 gap-3' },
+                  h(
+                    'button',
+                    {
+                      onClick: () => {
+                        setShowChoice(false);
+                        setActiveId(null);
+                      },
+                      className:
+                        'rounded-xl py-3 px-3 bg-gradient-to-r from-fuchsia-600 to-cyan-600 text-white font-semibold hover:opacity-90 transition-opacity',
+                    },
+                    'メニューに戻る'
+                  ),
+                  h(
+                    'button',
+                    {
+                      onClick: () => setShowChoice(false),
+                      className:
+                        'rounded-xl py-3 px-3 border border-slate-600 bg-slate-800 text-slate-100 font-semibold hover:bg-slate-700 transition-colors',
+                    },
+                    'このまま続ける'
+                  )
+                )
+              )
+            )
+        );
+      };
+
+      const root = ReactDOM.createRoot(document.getElementById('root'));
+      root.render(h(App));
+    </script>
+  </body>
+</html>
