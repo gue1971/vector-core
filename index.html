@@ -19,8 +19,8 @@
       }
     </style>
   </head>
-  <body class="bg-slate-100">
-    <div id="root" class="p-6 text-sm text-slate-600">
+  <body class="bg-slate-950">
+    <div id="root" class="p-0 text-sm text-slate-300">
       読み込み中です。表示されない場合はインターネット接続を確認して再読み込みしてください。
     </div>
 
@@ -196,14 +196,14 @@
         };
 
         return h(
-          'div',
-          {
-            className:
-              'h-[100dvh] bg-slate-950 flex flex-col text-slate-200 overflow-hidden selection:bg-teal-500/30 rounded-2xl border border-slate-800',
-          },
+            'div',
+            {
+              className:
+              'h-full w-full bg-slate-950 flex flex-col text-slate-200 overflow-hidden selection:bg-teal-500/30',
+            },
           h(
             'div',
-            { className: 'flex-1 relative flex items-center justify-center p-4' },
+            { className: 'flex-1 relative flex items-start justify-center px-2 pt-1 pb-2' },
             h('div', {
               className:
                 'absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(20,83,45,0.15)_0%,transparent_70%)] pointer-events-none',
@@ -212,7 +212,7 @@
               'svg',
               {
                 viewBox: '0 0 400 600',
-                className: 'w-full h-full max-w-md drop-shadow-[0_0_8px_rgba(45,212,191,0.4)]',
+                className: 'w-full h-full max-w-none drop-shadow-[0_0_8px_rgba(45,212,191,0.4)]',
                 preserveAspectRatio: 'xMidYMid meet',
               },
               generateBranches
@@ -226,7 +226,7 @@
             },
             h(
               'div',
-              { className: 'max-w-md mx-auto' },
+              { className: 'w-full max-w-none mx-auto' },
               h(
                 'div',
                 { className: 'flex items-center justify-between mb-6' },
@@ -397,14 +397,14 @@
         };
 
         return h(
-          'div',
-          {
-            className:
-              'h-[100dvh] bg-slate-950 flex flex-col text-slate-200 overflow-hidden selection:bg-fuchsia-500/30 rounded-2xl border border-slate-800',
-          },
+            'div',
+            {
+              className:
+              'h-full w-full bg-slate-950 flex flex-col text-slate-200 overflow-hidden selection:bg-fuchsia-500/30',
+            },
           h(
             'div',
-            { className: 'flex-1 relative flex items-center justify-center p-4' },
+            { className: 'flex-1 relative flex items-start justify-center px-2 pt-1 pb-2' },
             h('div', {
               className:
                 'absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(192,38,211,0.08)_0%,transparent_60%)] pointer-events-none',
@@ -414,7 +414,7 @@
               {
                 viewBox: '0 0 400 500',
                 className:
-                  'w-full h-full max-w-md drop-shadow-[0_0_12px_rgba(217,70,239,0.3)] transition-transform duration-75',
+                  'w-full h-full max-w-none drop-shadow-[0_0_12px_rgba(217,70,239,0.3)] transition-transform duration-75',
                 preserveAspectRatio: 'xMidYMid meet',
                 style: { transform: `rotate(${svgRotation}deg)` },
               },
@@ -452,7 +452,7 @@
             },
             h(
               'div',
-              { className: 'max-w-md mx-auto' },
+              { className: 'w-full max-w-none mx-auto' },
               h(
                 'div',
                 { className: 'flex items-center justify-between mb-6' },
@@ -655,15 +655,15 @@
         };
 
         return h(
-          'div',
-          {
-            className:
-              'h-[100dvh] bg-neutral-950 flex flex-col text-neutral-200 overflow-hidden selection:bg-amber-500/30 rounded-2xl border border-neutral-800',
-          },
+            'div',
+            {
+              className:
+              'h-full w-full bg-neutral-950 flex flex-col text-neutral-200 overflow-hidden selection:bg-amber-500/30',
+            },
           h(
             'div',
             {
-              className: 'flex-1 relative flex items-center justify-center p-4',
+              className: 'flex-1 relative flex items-start justify-center px-2 pt-1 pb-2',
             },
             h('div', {
               className:
@@ -672,7 +672,7 @@
             h(
               'div',
               {
-                className: 'w-full h-full max-w-md drop-shadow-[0_0_8px_rgba(245,158,11,0.2)] flex items-center justify-center',
+                className: 'w-full h-full max-w-none drop-shadow-[0_0_8px_rgba(245,158,11,0.2)] flex items-start justify-center',
               },
             h(
               'svg',
@@ -710,7 +710,7 @@
             },
             h(
               'div',
-              { className: 'max-w-md mx-auto' },
+              { className: 'w-full max-w-none mx-auto' },
               h(
                 'div',
                 { className: 'flex items-center justify-between mb-6' },
@@ -1006,11 +1006,11 @@
         }, [updateSequenceOffset]);
 
         return h(
-          'div',
-          {
-            className:
-              'h-[100dvh] bg-slate-950 flex flex-col text-slate-200 overflow-hidden selection:bg-cyan-500/30 rounded-2xl border border-slate-800',
-          },
+            'div',
+            {
+              className:
+              'h-full w-full bg-slate-950 flex flex-col text-slate-200 overflow-hidden selection:bg-cyan-500/30',
+            },
           h(
             'div',
             { className: 'px-6 pt-3 pb-1 z-10 shrink-0' },
@@ -1044,7 +1044,7 @@
           ),
           h(
             'div',
-            { className: 'flex-1 min-h-0 relative flex items-center justify-center p-2' },
+            { className: 'flex-1 min-h-0 relative flex items-start justify-center px-2 pt-0.5 pb-2' },
             h('div', {
               className: 'absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(6,182,212,0.08)_0%,transparent_70%)] pointer-events-none',
             }),
@@ -1052,7 +1052,7 @@
               'svg',
               {
                 viewBox: '0 0 400 650',
-                className: 'w-full h-full max-w-md drop-shadow-[0_0_12px_rgba(6,182,212,0.15)]',
+                className: 'w-full h-full max-w-none drop-shadow-[0_0_12px_rgba(6,182,212,0.15)]',
                 preserveAspectRatio: 'xMidYMid meet',
               },
               h(
@@ -1154,7 +1154,7 @@
             },
             h(
               'div',
-              { className: 'max-w-md mx-auto' },
+              { className: 'w-full max-w-none mx-auto' },
               h(
                 'div',
                 { className: 'flex items-center justify-between mb-6' },
@@ -1433,11 +1433,11 @@
         );
 
         return h(
-          'div',
-          {
-            className:
-              'h-[100dvh] bg-slate-950 flex flex-col text-slate-200 overflow-hidden selection:bg-cyan-500/30 rounded-2xl border border-slate-800',
-          },
+            'div',
+            {
+              className:
+              'h-full w-full bg-slate-950 flex flex-col text-slate-200 overflow-hidden selection:bg-cyan-500/30',
+            },
           h(
             'div',
             { className: 'px-6 pt-6 pb-2 shrink-0 flex items-center justify-between z-10' },
@@ -1457,14 +1457,14 @@
           ),
           h(
             'div',
-            { className: 'flex-1 relative flex items-center justify-center p-4' },
+            { className: 'flex-1 relative flex items-start justify-center px-2 pt-1 pb-2' },
             h('div', {
               className: 'absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(6,182,212,0.05)_0%,transparent_70%)] pointer-events-none',
             }),
             h(
               'div',
               {
-                className: `relative w-full max-w-md aspect-square rounded-xl overflow-hidden border border-slate-800 bg-slate-900 transition-all duration-500 ${
+                className: `relative w-full max-w-none aspect-square rounded-xl overflow-hidden border border-slate-800 bg-slate-900 transition-all duration-500 ${
                   status === 'won' ? 'shadow-[0_0_30px_rgba(16,185,129,0.2)] border-emerald-900/50' : 'shadow-[0_0_20px_rgba(0,0,0,0.5)]'
                 }`,
               },
@@ -1558,7 +1558,7 @@
             },
             h(
               'div',
-              { className: 'max-w-md mx-auto flex flex-col items-center gap-6' },
+              { className: 'w-full max-w-none mx-auto flex flex-col items-center gap-6' },
               h(
                 'div',
                 { className: 'relative w-40 h-40 touch-none' },
@@ -1653,11 +1653,51 @@
 
       const App = () => {
         const samples = [
-          { id: 'fractal-mutation-mobile', label: '1. Fractal Mutation', component: FractalMutationMobileDemo },
-          { id: 'trochoid-mutation-mobile', label: '2. Trochoid Mutation', component: TrochoidMutationMobileDemo },
-          { id: 'pendulum-harmonograph', label: '3. Harmonograph', component: PendulumHarmonographDemo },
-          { id: 'llm-engine-mobile', label: '4. LLM Engine', component: LlmEngineMobileDemo },
-          { id: 'neural-maze', label: '5. Neural Maze', component: NeuralMazeDemo },
+          {
+            id: 'fractal-mutation-mobile',
+            label: '1. Fractal Mutation',
+            component: FractalMutationMobileDemo,
+            buttonClass:
+              'border-emerald-500/35 bg-gradient-to-r from-emerald-950/75 to-teal-900/40 hover:from-emerald-900/85 hover:to-teal-800/50',
+            chipClass: 'text-emerald-200',
+            panelClass: 'border-emerald-500/30 bg-emerald-950/80',
+          },
+          {
+            id: 'trochoid-mutation-mobile',
+            label: '2. Trochoid Mutation',
+            component: TrochoidMutationMobileDemo,
+            buttonClass:
+              'border-fuchsia-500/35 bg-gradient-to-r from-fuchsia-950/70 to-violet-900/40 hover:from-fuchsia-900/80 hover:to-violet-800/50',
+            chipClass: 'text-fuchsia-200',
+            panelClass: 'border-fuchsia-500/30 bg-fuchsia-950/75',
+          },
+          {
+            id: 'pendulum-harmonograph',
+            label: '3. Harmonograph',
+            component: PendulumHarmonographDemo,
+            buttonClass:
+              'border-amber-500/35 bg-gradient-to-r from-amber-950/70 to-orange-900/40 hover:from-amber-900/80 hover:to-orange-800/50',
+            chipClass: 'text-amber-200',
+            panelClass: 'border-amber-500/30 bg-amber-950/75',
+          },
+          {
+            id: 'llm-engine-mobile',
+            label: '4. LLM Engine',
+            component: LlmEngineMobileDemo,
+            buttonClass:
+              'border-cyan-500/35 bg-gradient-to-r from-cyan-950/70 to-sky-900/40 hover:from-cyan-900/80 hover:to-sky-800/50',
+            chipClass: 'text-cyan-200',
+            panelClass: 'border-cyan-500/30 bg-cyan-950/75',
+          },
+          {
+            id: 'neural-maze',
+            label: '5. Neural Maze',
+            component: NeuralMazeDemo,
+            buttonClass:
+              'border-indigo-500/35 bg-gradient-to-r from-indigo-950/75 to-cyan-900/40 hover:from-indigo-900/85 hover:to-cyan-800/50',
+            chipClass: 'text-indigo-200',
+            panelClass: 'border-indigo-500/30 bg-indigo-950/75',
+          },
         ];
 
         const [activeId, setActiveId] = useState(null);
@@ -1669,28 +1709,27 @@
             'div',
             {
               className:
-                'h-[100dvh] bg-slate-950 text-slate-100 p-6 flex flex-col items-center justify-center selection:bg-cyan-500/30',
+                'h-[100dvh] bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.15)_0%,rgba(2,6,23,1)_62%)] text-slate-100 px-3 py-4 sm:p-6 flex flex-col items-center justify-start selection:bg-cyan-500/30 overflow-auto',
             },
             h(
               'div',
               {
                 className:
-                  'w-full max-w-md rounded-3xl border border-slate-800 bg-slate-900/70 backdrop-blur-xl p-6 shadow-[0_20px_60px_rgba(0,0,0,0.45)]',
+                  'w-full max-w-[980px] rounded-3xl border border-slate-800 bg-slate-900/72 backdrop-blur-xl p-4 sm:p-6 shadow-[0_20px_60px_rgba(0,0,0,0.45)]',
               },
               h('h1', { className: 'text-2xl font-bold tracking-tight mb-5 text-center' }, 'SVG Animation'),
               h(
                 'div',
-                { className: 'space-y-3' },
+                { className: 'grid gap-3 md:grid-cols-2' },
                 ...samples.map((sample) =>
                   h(
                     'button',
                     {
                       key: sample.id,
                       onClick: () => setActiveId(sample.id),
-                      className:
-                        'w-full text-left rounded-2xl border border-slate-700 bg-gradient-to-r from-slate-900 to-slate-800 px-4 py-4 hover:from-cyan-900/40 hover:to-fuchsia-900/30 transition-all',
+                      className: `w-full text-left rounded-2xl border px-4 py-4 transition-all ${sample.buttonClass}`,
                     },
-                    h('div', { className: 'text-base font-semibold mt-0.5' }, sample.label)
+                    h('div', { className: `text-base font-semibold mt-0.5 ${sample.chipClass}` }, sample.label)
                   )
                 )
               )
@@ -1700,25 +1739,40 @@
 
         return h(
           'div',
-          { className: 'h-[100dvh] relative' },
-          h(activeSample.component),
-          h('button', {
-            onClick: () => setShowChoice(true),
-            'aria-label': 'メニュー表示オプション',
-            className: 'absolute left-1/2 top-[45%] -translate-x-1/2 -translate-y-1/2 w-[62%] h-[30%] bg-transparent z-20',
-          }),
+          { className: 'h-[100dvh] bg-slate-950 text-slate-100 relative overflow-hidden' },
+          h(
+            'div',
+            { className: 'h-full w-full md:px-6 md:pt-3 md:pb-4 flex items-start justify-center' },
+            h(
+              'div',
+              {
+                className:
+                  'relative w-full h-full md:h-[calc(100dvh-1.75rem)] md:max-w-[380px] lg:max-w-[390px] overflow-hidden md:rounded-[2rem] md:border md:border-slate-700 md:shadow-[0_22px_70px_rgba(0,0,0,0.55)]',
+              },
+              h(activeSample.component),
+              h(
+                'button',
+                {
+                  onClick: () => setShowChoice(true),
+                  'aria-label': 'メニュー表示',
+                  className:
+                    'absolute top-3 right-3 z-20 rounded-full px-3 py-1.5 text-xs font-semibold border border-slate-600 bg-slate-900/82 text-slate-100 backdrop-blur hover:bg-slate-800 transition-colors',
+                },
+                'Menu'
+              )
+            )
+          ),
           showChoice &&
             h(
               'div',
               {
-                className: 'absolute inset-0 z-30 bg-slate-950/45 backdrop-blur-[2px] flex items-center justify-center p-6',
+                className: 'absolute inset-0 z-30 bg-slate-950/45 backdrop-blur-[2px] flex items-center justify-center p-4',
                 style: { animation: 'softFadeIn 220ms ease-out' },
               },
               h(
                 'div',
                 {
-                  className:
-                    'w-full max-w-sm rounded-3xl border border-slate-700 bg-slate-900/72 p-5 shadow-[0_20px_60px_rgba(0,0,0,0.45)]',
+                  className: `w-full max-w-[560px] rounded-3xl border p-5 shadow-[0_20px_60px_rgba(0,0,0,0.45)] ${activeSample.panelClass}`,
                   style: { animation: 'softFadeIn 260ms ease-out' },
                 },
                 h('h3', { className: 'text-center text-lg font-bold text-slate-100 mb-4' }, 'Options'),
