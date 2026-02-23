@@ -1265,6 +1265,8 @@
         const [goal] = useState({ x: GRID_SIZE - 2, y: GRID_SIZE - 2 });
         const [status, setStatus] = useState('playing');
         const [solutionPath, setSolutionPath] = useState('');
+        const [solutionStart, setSolutionStart] = useState(null);
+        const [solutionRunId, setSolutionRunId] = useState(0);
         const [pathLength, setPathLength] = useState(0);
         const holdStartTimeoutRef = useRef(null);
         const holdIntervalRef = useRef(null);
@@ -1301,6 +1303,7 @@
           setPlayer({ x: 1, y: 1 });
           setStatus('playing');
           setSolutionPath('');
+          setSolutionStart(null);
           setPathLength(0);
         }, []);
 
@@ -1403,6 +1406,11 @@
           }
 
           if (finalPath.length > 0) {
+            const start = finalPath[0];
+            setSolutionStart({
+              x: start.x * CELL_SIZE + CELL_SIZE / 2,
+              y: start.y * CELL_SIZE + CELL_SIZE / 2,
+            });
             const d = finalPath
               .map((p, index) => {
                 const cx = p.x * CELL_SIZE + CELL_SIZE / 2;
@@ -1412,6 +1420,9 @@
               .join(' ');
             setSolutionPath(d);
             setPathLength(finalPath.length * CELL_SIZE);
+            setSolutionRunId((id) => id + 1);
+          } else {
+            setStatus('playing');
           }
         };
 
@@ -1492,6 +1503,7 @@
                   className: 'animate-pulse',
                 }),
                 solutionPath &&
+                  solutionStart &&
                   h(
                     'g',
                     null,
@@ -1524,7 +1536,14 @@
                     }),
                     h(
                       'circle',
-                      { r: CELL_SIZE * 0.4, fill: '#ffffff', style: { filter: 'drop-shadow(0 0 6px #ffffff)' } },
+                      {
+                        key: `solution-dot-${solutionRunId}`,
+                        cx: solutionStart.x,
+                        cy: solutionStart.y,
+                        r: CELL_SIZE * 0.4,
+                        fill: '#ffffff',
+                        style: { filter: 'drop-shadow(0 0 6px #ffffff)' },
+                      },
                       h('animateMotion', {
                         dur: `${pathLength / 160}s`,
                         path: solutionPath,
