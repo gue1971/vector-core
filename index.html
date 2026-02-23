@@ -1265,7 +1265,7 @@
         const [goal] = useState({ x: GRID_SIZE - 2, y: GRID_SIZE - 2 });
         const [status, setStatus] = useState('playing');
         const [solutionPath, setSolutionPath] = useState('');
-        const [solutionStart, setSolutionStart] = useState(null);
+        const [solutionPoints, setSolutionPoints] = useState([]);
         const [solutionRunId, setSolutionRunId] = useState(0);
         const [pathLength, setPathLength] = useState(0);
         const holdStartTimeoutRef = useRef(null);
@@ -1303,7 +1303,7 @@
           setPlayer({ x: 1, y: 1 });
           setStatus('playing');
           setSolutionPath('');
-          setSolutionStart(null);
+          setSolutionPoints([]);
           setPathLength(0);
         }, []);
 
@@ -1406,11 +1406,10 @@
           }
 
           if (finalPath.length > 0) {
-            const start = finalPath[0];
-            setSolutionStart({
-              x: start.x * CELL_SIZE + CELL_SIZE / 2,
-              y: start.y * CELL_SIZE + CELL_SIZE / 2,
-            });
+            const points = finalPath.map((p) => ({
+              x: p.x * CELL_SIZE + CELL_SIZE / 2,
+              y: p.y * CELL_SIZE + CELL_SIZE / 2,
+            }));
             const d = finalPath
               .map((p, index) => {
                 const cx = p.x * CELL_SIZE + CELL_SIZE / 2;
@@ -1418,8 +1417,15 @@
                 return `${index === 0 ? 'M' : 'L'} ${cx} ${cy}`;
               })
               .join(' ');
+            let length = 0;
+            for (let i = 1; i < points.length; i += 1) {
+              const dx = points[i].x - points[i - 1].x;
+              const dy = points[i].y - points[i - 1].y;
+              length += Math.hypot(dx, dy);
+            }
             setSolutionPath(d);
-            setPathLength(finalPath.length * CELL_SIZE);
+            setSolutionPoints(points);
+            setPathLength(length || CELL_SIZE);
             setSolutionRunId((id) => id + 1);
           } else {
             setStatus('playing');
@@ -1503,7 +1509,7 @@
                   className: 'animate-pulse',
                 }),
                 solutionPath &&
-                  solutionStart &&
+                  solutionPoints.length > 0 &&
                   h(
                     'g',
                     null,
@@ -1538,23 +1544,31 @@
                       'circle',
                       {
                         key: `solution-dot-${solutionRunId}`,
-                        cx: solutionStart.x,
-                        cy: solutionStart.y,
+                        cx: solutionPoints[0].x,
+                        cy: solutionPoints[0].y,
                         r: CELL_SIZE * 0.4,
                         fill: '#ffffff',
                         style: { filter: 'drop-shadow(0 0 6px #ffffff)' },
                       },
-                      h('animateMotion', {
+                      h('animate', {
+                        attributeName: 'cx',
                         dur: `${pathLength / 160}s`,
-                        path: solutionPath,
-                        fill: 'freeze',
+                        values: solutionPoints.map((p) => p.x).join(';'),
                         calcMode: 'linear',
+                        fill: 'freeze',
+                      }),
+                      h('animate', {
+                        attributeName: 'cy',
+                        dur: `${pathLength / 160}s`,
+                        values: solutionPoints.map((p) => p.y).join(';'),
+                        calcMode: 'linear',
+                        fill: 'freeze',
                       }),
                       h('animate', {
                         attributeName: 'opacity',
-                        values: '1;0',
-                        begin: `${pathLength / 160}s`,
-                        dur: '0.4s',
+                        values: '1;1;0',
+                        keyTimes: '0;0.92;1',
+                        dur: `${pathLength / 160}s`,
                         fill: 'freeze',
                       })
                     )
